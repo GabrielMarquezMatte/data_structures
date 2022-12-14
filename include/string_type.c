@@ -32,6 +32,10 @@ void string_free(string_t *s)
     s->size = 0;
     s->capacity = 0;
 }
+void string_clear(string_t *s)
+{
+    s->size = 0;
+}
 void string_reserve(string_t *s, size_t capacity)
 {
     if (s->capacity < capacity)

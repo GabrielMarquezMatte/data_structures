@@ -15,6 +15,7 @@ typedef struct hash_table
 
 void hash_table_init_alloc(hash_table_t *ht, size_t capacity);
 void hash_table_free(hash_table_t *ht);
+void hash_table_clear(hash_table_t *ht);
 void hash_table_insert(hash_table_t *ht, void *key, void *value, size_t key_size, size_t value_size);
 void hash_table_remove(hash_table_t *ht, void *key, size_t key_size);
 void *hash_table_get(hash_table_t *ht, void *key, size_t key_size);

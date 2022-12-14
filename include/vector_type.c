@@ -32,6 +32,10 @@ void vector_free(vector_t *v)
     v->size = 0;
     v->capacity = 0;
 }
+void vector_clear(vector_t *v)
+{
+    v->size = 0;
+}
 void vector_reserve(vector_t *v, size_t capacity, size_t size)
 {
     if (v->capacity < capacity)

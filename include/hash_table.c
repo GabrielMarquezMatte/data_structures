@@ -1,5 +1,6 @@
 #include "hash_table.h"
 #include <stdlib.h>
+#include <string.h>
 
 size_t hash_table_hash(void *key, size_t key_size)
 {
@@ -53,6 +54,25 @@ void hash_table_free(hash_table_t *ht)
         }
     }
     free(ht->entries);
+}
+
+void hash_table_clear(hash_table_t *ht)
+{
+    size_t i;
+    for (i = 0; i < ht->capacity; i++)
+    {
+        hash_table_entry_t *entry = ht->entries[i];
+        while (entry != NULL)
+        {
+            hash_table_entry_t *next = entry->next;
+            free(entry->key);
+            free(entry->value);
+            free(entry);
+            entry = next;
+        }
+        ht->entries[i] = NULL;
+    }
+    ht->size = 0;
 }
 
 void hash_table_insert(hash_table_t *ht, void *key, void *value, size_t key_size, size_t value_size)
