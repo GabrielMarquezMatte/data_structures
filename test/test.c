@@ -100,7 +100,7 @@ int hash_vector_test(int size)
         {
             vector_push_back(v, &j, sizeof(int));
         }
-        //The key is going to be Vector_%d
+        // The key is going to be Vector_%d
         int size_for_buffer = snprintf(NULL, 0, "Vector_%d", i);
         char *buffer = malloc(size_for_buffer + 1);
         sprintf(buffer, "Vector_%d", i);
@@ -155,11 +155,12 @@ int main(int argc, char **argv)
                 hash_table_test(size);
                 return 0;
             }
-            if(strcmp(argv[i], "--set") == 0)
+            if (strcmp(argv[i], "--set") == 0)
             {
+                set_test(size);
                 return 0;
             }
-            if(strcmp(argv[i], "--hash_vector") == 0)
+            if (strcmp(argv[i], "--hash_vector") == 0)
             {
                 hash_vector_test(size);
                 return 0;

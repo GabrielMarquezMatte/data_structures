@@ -17,9 +17,6 @@ void set_init_alloc(set_t *set, size_t capacity) {
 }
 
 void set_type_free(set_t *set) {
-    for(size_t i = 0; i < set->size; i++) {
-        free(set->data[i]);
-    }
     free(set->data);
 }
 

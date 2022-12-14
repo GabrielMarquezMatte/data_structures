@@ -36,6 +36,15 @@ void vector_clear(vector_t *v)
 {
     v->size = 0;
 }
+void vector_remove(vector_t *v, size_t index, size_t size)
+{
+    if (index >= v->size)
+    {
+        return;
+    }
+    memmove((char *)v->data + index * size, (char *)v->data + (index + 1) * size, (v->size - index - 1) * size);
+    v->size--;
+}
 void vector_reserve(vector_t *v, size_t capacity, size_t size)
 {
     if (v->capacity < capacity)
