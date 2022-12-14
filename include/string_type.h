@@ -1,5 +1,5 @@
 #pragma once
-typedef unsigned __int64 size_t;
+#include <stdio.h>
 typedef struct
 {
     char *data;

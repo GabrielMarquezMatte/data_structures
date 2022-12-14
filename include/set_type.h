@@ -1,6 +1,5 @@
 #pragma once
-typedef unsigned __int64 size_t;
-
+#include <stdio.h>
 typedef struct set_t {
     size_t size;
     size_t capacity;
