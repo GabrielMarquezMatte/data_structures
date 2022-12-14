@@ -2,58 +2,170 @@
 #include <stdlib.h>
 #include <string.h>
 #include "structures.h"
-void vector_string_test(){
+int vector_string_test(int size)
+{
     vector_t *v = malloc(sizeof(vector_t));
-    vector_init_alloc(v, 100, sizeof(int));
+    vector_init_alloc(v, size, sizeof(int));
     int i;
-    for (i = 0; i < 100; i++)
+    for (i = 0; i < size; i++)
     {
         vector_push_back(v, &i, sizeof(int));
     }
     string_t *result_str = malloc(sizeof(string_t));
-    string_init_alloc(result_str,1024*1024);
-    for (i = 0; i < 100; i++)
+    string_init_alloc(result_str, 1024 * 1024);
+    for (i = 0; i < size; i++)
     {
         int *value = vector_get(v, i, sizeof(int));
-        char buffer[22];
+        int size_for_buffer = snprintf(NULL, 0, "vector[%d] = %d\n", i, *value);
+        char *buffer = malloc(size_for_buffer + 1);
         sprintf(buffer, "vector[%d] = %d\n", i, *value);
         string_concat(result_str, buffer, strlen(buffer));
     }
-    string_print(result_str);
     vector_free(v);
     free(v);
     string_free(result_str);
     free(result_str);
+    fwrite("Vector test passed", 1, 18, stdout);
+    fflush(stdout);
+    return 1;
 }
-void hash_table_test(){
+int hash_table_test(int size)
+{
     hash_table_t *ht = malloc(sizeof(hash_table_t));
     hash_table_init_alloc(ht, 100);
     int i;
-    for (i = 0; i < 100; i++)
+    for (i = 0; i < size; i++)
     {
         hash_table_insert(ht, &i, &i, sizeof(int), sizeof(int));
     }
-    i = 99;
+    i--;
     int j = 1000;
     hash_table_insert(ht, &i, &j, sizeof(int), sizeof(int));
-    string_t* result_str = malloc(sizeof(string_t));
-    string_init_alloc(result_str,1024*1024);
-    for (i = 0; i < 100; i++)
+    string_t *result_str = malloc(sizeof(string_t));
+    string_init_alloc(result_str, 1024 * 1024);
+    for (i = 0; i < size; i++)
     {
         int *value = hash_table_get(ht, &i, sizeof(int));
-        char buffer[33];
+        int size_for_buffer = snprintf(NULL, 0, "hash_table[%d] = %d\n", i, *value);
+        char *buffer = malloc(size_for_buffer + 1);
         sprintf(buffer, "hash_table[%d] = %d\n", i, *value);
         string_concat(result_str, buffer, strlen(buffer));
+    }
+    string_free(result_str);
+    free(result_str);
+    hash_table_free(ht);
+    free(ht);
+    fwrite("Hash table test passed", 1, 22, stdout);
+    fflush(stdout);
+    return 1;
+}
+int set_test(int size)
+{
+    set_t *s = set_type_create(size);
+    int i;
+    for (i = 0; i < size; i++)
+    {
+        set_type_add(s, &i);
+    }
+    i--;
+    set_type_add(s, &i);
+    string_t *result_str = malloc(sizeof(string_t));
+    string_init_alloc(result_str, 1024 * 1024);
+    for (i = 0; i < size; i++)
+    {
+        int *value = set_type_get(s, i);
+        int size_for_buffer = snprintf(NULL, 0, "set[%d] = %d\n", i, *value);
+        char *buffer = malloc(size_for_buffer + 1);
+        sprintf(buffer, "set[%d] = %d\n", i, *value);
+        string_concat(result_str, buffer, strlen(buffer));
+    }
+    string_free(result_str);
+    free(result_str);
+    set_type_free(s);
+    free(s);
+    fwrite("Set test passed", 1, 15, stdout);
+    fflush(stdout);
+    return 1;
+}
+int hash_vector_test(int size)
+{
+    hash_table_t *ht = malloc(sizeof(hash_table_t));
+    hash_table_init_alloc(ht, size);
+    for (int i = 0; i < size; i++)
+    {
+        vector_t *v = malloc(sizeof(vector_t));
+        vector_init_alloc(v, 10, sizeof(int));
+        int j;
+        for (j = 0; j < 10; j++)
+        {
+            vector_push_back(v, &j, sizeof(int));
+        }
+        //The key is going to be Vector_%d
+        int size_for_buffer = snprintf(NULL, 0, "Vector_%d", i);
+        char *buffer = malloc(size_for_buffer + 1);
+        sprintf(buffer, "Vector_%d", i);
+        hash_table_insert(ht, buffer, v, strlen(buffer), sizeof(vector_t));
+    }
+    string_t *result_str = malloc(sizeof(string_t));
+    string_init_alloc(result_str, 1024 * 1024);
+    for (int i = 0; i < size; i++)
+    {
+        int size_for_buffer = snprintf(NULL, 0, "Vector_%d", i);
+        char *buffer = malloc(size_for_buffer + 1);
+        sprintf(buffer, "Vector_%d", i);
+        vector_t *v = hash_table_get(ht, buffer, strlen(buffer));
+        for (int j = 0; j < 10; j++)
+        {
+            int *value = vector_get(v, j, sizeof(int));
+            int size_for_buffer = snprintf(NULL, 0, "hash_table[%d][%d] = %d\n", i, j, *value);
+            char *buffer = malloc(size_for_buffer + 1);
+            sprintf(buffer, "hash_table[%d][%d] = %d\n", i, j, *value);
+            string_concat(result_str, buffer, strlen(buffer));
+        }
     }
     string_print(result_str);
     string_free(result_str);
     free(result_str);
     hash_table_free(ht);
     free(ht);
+    fwrite("Hash vector test passed", 1, 23, stdout);
+    fflush(stdout);
+    return 1;
 }
-int main()
+int main(int argc, char **argv)
 {
-    // vector_string_test();
-    hash_table_test();
-    return 0;
+    int size = 100;
+    if (argc > 1)
+    {
+        size = atoi(argv[1]);
+        for (int i = 2; i < argc; i++)
+        {
+            if (strcmp(argv[i], "-h") == 0 || strcmp(argv[i], "--help") == 0)
+            {
+                printf("Usage: %s size [-v --vector] [--hash] [--set] [--hash_vector]\n", argv[0]);
+                return 0;
+            }
+            if (strcmp(argv[i], "-v") == 0 || strcmp(argv[i], "--vector") == 0)
+            {
+                vector_string_test(size);
+                return 0;
+            }
+            if (strcmp(argv[i], "--hash") == 0)
+            {
+                hash_table_test(size);
+                return 0;
+            }
+            if(strcmp(argv[i], "--set") == 0)
+            {
+                return 0;
+            }
+            if(strcmp(argv[i], "--hash_vector") == 0)
+            {
+                hash_vector_test(size);
+                return 0;
+            }
+        }
+    }
+    printf("Usage: %s [size] [-v --vector] [--hash] [--set] [--hash_vector]\n", argv[0]);
+    return 1;
 }

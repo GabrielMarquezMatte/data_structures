@@ -1,3 +1,5 @@
+#pragma once
+typedef unsigned __int64 size_t;
 typedef struct hash_table_entry
 {
     void *key;

@@ -1,4 +1,8 @@
 #include "vector_type.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
 void vector_init(vector_t *v)
 {
     v->data = NULL;

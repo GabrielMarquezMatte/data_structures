@@ -1,4 +1,8 @@
 #include "string_type.h"
+#include <stdlib.h>
+#include <string.h>
+#include <stdio.h>
+
 void string_init(string_t *s)
 {
     s->data = NULL;
@@ -45,7 +49,7 @@ void string_set(string_t *s, char *data, size_t size)
 }
 void string_concat(string_t *s, char *data, size_t size)
 {
-    string_reserve(s, s->size + size + 1);
+    string_reserve(s, (s->size + size)*2);
     memcpy(s->data + s->size, data, size);
     s->size += size;
     s->data[s->size] = '\0';

@@ -8,7 +8,7 @@ add_subdirectory(include)
 
 add_library(${PROJECT_NAME} structures.c structures.h)
 target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_SOURCE_DIR}/include)
-target_link_libraries(${PROJECT_NAME} PRIVATE vector_type string_type hash_table)
+target_link_libraries(${PROJECT_NAME} PRIVATE vector_type string_type hash_table set_type)
 
 add_subdirectory(test)
 
