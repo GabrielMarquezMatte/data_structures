@@ -1,7 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#ifdef _WIN32
 #include <Windows.h>
+#else
+#include <pthread.h>
+#endif
 #include "structures.h"
 int vector_string_test(int size)
 {
@@ -15,7 +19,7 @@ int vector_string_test(int size)
     for (i = 0; i < size; i++)
     {
         int *value = vector_get(v, i, sizeof(int));
-        if(*value != i)
+        if (*value != i)
         {
             fwrite("Vector test failed\n", 1, 19, stdout);
             fflush(stdout);
@@ -43,13 +47,13 @@ int hash_table_test(int size)
     for (i = 0; i < size; i++)
     {
         int *value = hash_table_get(ht, &i, sizeof(int));
-        if(*value != i && i != size - 1)
+        if (*value != i && i != size - 1)
         {
             fwrite("Hash table test failed\n", 1, 23, stdout);
             fflush(stdout);
             return 0;
         }
-        else if(*value != 1000 && i == size - 1)
+        else if (*value != 1000 && i == size - 1)
         {
             fwrite("Hash table test failed\n", 1, 23, stdout);
             fflush(stdout);
@@ -75,7 +79,7 @@ int set_test(int size)
     for (i = 0; i < size; i++)
     {
         int *value = set_type_get(s, i);
-        if(*value != i)
+        if (*value != i)
         {
             fwrite("Set test failed\n", 1, 16, stdout);
             fflush(stdout);
@@ -116,7 +120,7 @@ int hash_vector_test(int size)
         for (int j = 0; j < 10; j++)
         {
             int *value = vector_get(v, j, sizeof(int));
-            if(*value != j)
+            if (*value != j)
             {
                 fwrite("Hash vector test failed\n", 1, 24, stdout);
                 fflush(stdout);
@@ -136,7 +140,11 @@ int main(int argc, char **argv)
     int runned = 0;
     if (argc > 1)
     {
+#ifdef _WIN32
         HANDLE *thread_array = malloc(sizeof(HANDLE) * (argc - 2));
+#else
+        pthread_t *thread_array = malloc(sizeof(pthread_t) * (argc - 2));
+#endif
         size = atoi(argv[1]);
         for (int i = 2; i < argc; i++)
         {
@@ -147,30 +155,55 @@ int main(int argc, char **argv)
             }
             if (strcmp(argv[i], "-v") == 0 || strcmp(argv[i], "--vector") == 0)
             {
-                thread_array[i - 2] = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)vector_string_test,(LPVOID)size, 0, NULL);
+#ifdef _WIN32
+                thread_array[i - 2] = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)vector_string_test, (LPVOID)size, 0, NULL);
+#else
+                pthread_create(&thread_array[i - 2], NULL, (void *)vector_string_test, (void *)size);
+#endif
                 runned = 1;
             }
             if (strcmp(argv[i], "--hash") == 0)
             {
-                thread_array[i - 2] = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)hash_table_test,(LPVOID)size, 0, NULL);
+#ifdef _WIN32
+                thread_array[i - 2] = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)hash_table_test, (LPVOID)size, 0, NULL);
+#else
+                pthread_create(&thread_array[i - 2], NULL, (void *)hash_table_test, (void *)size);
+#endif
                 runned = 1;
             }
             if (strcmp(argv[i], "--set") == 0)
             {
-                thread_array[i - 2] = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)set_test,(LPVOID)size, 0, NULL);
+#ifdef _WIN32
+                thread_array[i - 2] = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)set_test, (LPVOID)size, 0, NULL);
+#else
+                pthread_create(&thread_array[i - 2], NULL, (void *)set_test, (void *)size);
+#endif
                 runned = 1;
             }
             if (strcmp(argv[i], "--hash_vector") == 0)
             {
-                thread_array[i - 2] = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)hash_vector_test,(LPVOID)size, 0, NULL);
+#ifdef _WIN32
+                thread_array[i - 2] = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)hash_vector_test, (LPVOID)size, 0, NULL);
+#else
+                pthread_create(&thread_array[i - 2], NULL, (void *)hash_vector_test, (void *)size);
+#endif
                 runned = 1;
             }
         }
+#ifdef _WIN32
         WaitForMultipleObjects(argc - 2, thread_array, TRUE, INFINITE);
-        for(int i = 0; i < argc - 2; i++)
+#else
+        for (int i = 0; i < argc - 2; i++)
+        {
+            pthread_join(thread_array[i], NULL);
+        }
+#endif
+#ifdef _WIN32
+        for (int i = 0; i < argc - 2; i++)
         {
             CloseHandle(thread_array[i]);
         }
+#endif
         free(thread_array);
     }
     if (!runned)
