@@ -134,7 +134,7 @@ int hash_vector_test(int size)
     fflush(stdout);
     return 1;
 }
-void create_thread(void *thread_array, void *(*function)(int), int size, int index)
+void create_thread(void *thread_array, void *(*function)(void*), int size, int index)
 {
 #ifdef _WIN32
     ((HANDLE *)thread_array)[index] = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)function, (void *)size, 0, NULL);
