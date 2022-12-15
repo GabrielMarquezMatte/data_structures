@@ -134,6 +134,14 @@ int hash_vector_test(int size)
     fflush(stdout);
     return 1;
 }
+void create_thread(void *thread_array, void *(*function)(int), int size, int index)
+{
+#ifdef _WIN32
+    ((HANDLE *)thread_array)[index] = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)function, (void *)size, 0, NULL);
+#else
+    pthread_create(&((pthread_t *)thread_array)[index], NULL, function, (void *)size);
+#endif
+}
 int main(int argc, char **argv)
 {
     int size = 100;
@@ -155,38 +163,22 @@ int main(int argc, char **argv)
             }
             if (strcmp(argv[i], "-v") == 0 || strcmp(argv[i], "--vector") == 0)
             {
-#ifdef _WIN32
-                thread_array[i - 2] = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)vector_string_test, (LPVOID)size, 0, NULL);
-#else
-                pthread_create(&thread_array[i - 2], NULL, (void *)vector_string_test, (void *)size);
-#endif
+                create_thread(thread_array, (void *)vector_string_test, size, i - 2);
                 runned = 1;
             }
             if (strcmp(argv[i], "--hash") == 0)
             {
-#ifdef _WIN32
-                thread_array[i - 2] = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)hash_table_test, (LPVOID)size, 0, NULL);
-#else
-                pthread_create(&thread_array[i - 2], NULL, (void *)hash_table_test, (void *)size);
-#endif
+                create_thread(thread_array, (void *)hash_table_test, size, i - 2);
                 runned = 1;
             }
             if (strcmp(argv[i], "--set") == 0)
             {
-#ifdef _WIN32
-                thread_array[i - 2] = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)set_test, (LPVOID)size, 0, NULL);
-#else
-                pthread_create(&thread_array[i - 2], NULL, (void *)set_test, (void *)size);
-#endif
+                create_thread(thread_array, (void *)set_test, size, i - 2);
                 runned = 1;
             }
             if (strcmp(argv[i], "--hash_vector") == 0)
             {
-#ifdef _WIN32
-                thread_array[i - 2] = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)hash_vector_test, (LPVOID)size, 0, NULL);
-#else
-                pthread_create(&thread_array[i - 2], NULL, (void *)hash_vector_test, (void *)size);
-#endif
+                create_thread(thread_array, (void *)hash_vector_test, size, i - 2);
                 runned = 1;
             }
         }

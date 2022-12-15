@@ -49,7 +49,12 @@
         "structures.h": "c",
         "string.h": "c",
         "stdlib.h": "c",
-        "stdio.h": "c"
+        "stdio.h": "c",
+        "hash_table.h": "c",
+        "set_type.h": "c",
+        "queue_type.h": "c",
+        "windows.h": "c",
+        "processthreadsapi.h": "c"
     },
     "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools"
 }
