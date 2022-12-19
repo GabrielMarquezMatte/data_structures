@@ -51,8 +51,9 @@ void string_set(string_t *s, char *data, size_t size)
     s->data[size] = '\0';
     s->size = size;
 }
-void string_concat(string_t *s, char *data, size_t size)
+void string_concat(string_t *s, char *data)
 {
+    size_t size = strlen(data);
     string_reserve(s, (s->size + size)*2);
     memcpy(s->data + s->size, data, size);
     s->size += size;
@@ -60,5 +61,6 @@ void string_concat(string_t *s, char *data, size_t size)
 }
 void string_print(string_t *s)
 {
-    printf("%s", s->data);
+    fwrite(s->data, s->size, 1, stdout);
+    fflush(stdout);
 }

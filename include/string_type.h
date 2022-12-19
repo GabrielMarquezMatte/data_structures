@@ -13,5 +13,5 @@ void string_free(string_t *s);
 void string_clear(string_t *s);
 void string_reserve(string_t *s, size_t capacity);
 void string_set(string_t *s, char *data, size_t size);
-void string_concat(string_t *s, char *data, size_t size);
+void string_concat(string_t *s, char *data);
 void string_print(string_t *s);
