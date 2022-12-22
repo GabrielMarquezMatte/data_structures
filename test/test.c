@@ -131,6 +131,32 @@ int hash_vector_test(arguments_t *args)
     string_concat(result_str, "Hash vector test passed\n");
     return 1;
 }
+
+int binary_tree_test(arguments_t *args)
+{
+    int size = args->size;
+    string_t *result_str = args->str;
+    binary_tree *bt = malloc(sizeof(binary_tree));
+    binary_tree_init(bt);
+    for (int i = 0; i < size; i++)
+    {
+        binary_tree_insert(bt, &i);
+    }
+    for (int i = 0; i < size; i++)
+    {
+        size_t search = binary_tree_search(bt, &i);
+        if (search == 0)
+        {
+            string_concat(result_str, "Binary tree test failed\n");
+            return 0;
+        }
+    }
+    binary_tree_free(bt);
+    free(bt);
+    string_concat(result_str, "Binary tree test passed\n");
+    return 1;
+}
+
 void create_thread(void *thread_array, void *(*function)(void *), arguments_t *args, int index)
 {
 #ifdef _WIN32
@@ -160,7 +186,7 @@ int main(int argc, char **argv)
         {
             if (strcmp(argv[i], "-h") == 0 || strcmp(argv[i], "--help") == 0)
             {
-                printf("Usage: %s size [-v --vector] [--hash] [--set] [--hash_vector]\n", argv[0]);
+                printf("Usage: %s size [-v --vector] [--hash] [--set] [--hash_vector] [--binary_tree]\n", argv[0]);
                 return 1;
             }
             if (strcmp(argv[i], "-v") == 0 || strcmp(argv[i], "--vector") == 0)
@@ -181,6 +207,11 @@ int main(int argc, char **argv)
             if (strcmp(argv[i], "--hash_vector") == 0)
             {
                 create_thread(thread_array, (void *)hash_vector_test, args, i - 2);
+                runned = 1;
+            }
+            if(strcmp(argv[i], "--binary_tree") == 0)
+            {
+                create_thread(thread_array, (void *)binary_tree_test, args, i - 2);
                 runned = 1;
             }
         }
@@ -206,7 +237,7 @@ int main(int argc, char **argv)
     }
     if (!runned)
     {
-        printf("Usage: %s [size] [-v --vector] [--hash] [--set] [--hash_vector]\n", argv[0]);
+        printf("Usage: %s size [-v --vector] [--hash] [--set] [--hash_vector] [--binary_tree]\n", argv[0]);
         return 1;
     }
     return 0;
