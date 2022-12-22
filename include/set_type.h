@@ -1,6 +1,7 @@
 #pragma once
-#include <stdio.h>
-typedef struct set_t {
+#include <vcruntime.h>
+typedef struct set_t
+{
     size_t size;
     size_t capacity;
     void **data;

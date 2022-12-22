@@ -1,5 +1,5 @@
 #pragma once
-#include <stdio.h>
+#include <vcruntime.h>
 typedef struct
 {
     char *data;

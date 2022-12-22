@@ -54,7 +54,8 @@
         "set_type.h": "c",
         "queue_type.h": "c",
         "windows.h": "c",
-        "processthreadsapi.h": "c"
+        "processthreadsapi.h": "c",
+        "vcruntime.h": "c"
     },
     "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools"
 }

@@ -7,7 +7,8 @@
 #include <pthread.h>
 #endif
 #include "structures.h"
-typedef struct {
+typedef struct
+{
     int size;
     string_t *str;
 } arguments_t;
@@ -27,13 +28,13 @@ int vector_string_test(arguments_t *args)
         int *value = vector_get(v, i, sizeof(int));
         if (*value != i)
         {
-            string_concat(result_str,"Vector test failed\n");
+            string_concat(result_str, "Vector test failed\n");
             return 0;
         }
     }
     vector_free(v);
     free(v);
-    string_concat(result_str,"Vector test passed\n");
+    string_concat(result_str, "Vector test passed\n");
     return 1;
 }
 int hash_table_test(arguments_t *args)
@@ -55,18 +56,18 @@ int hash_table_test(arguments_t *args)
         int *value = hash_table_get(ht, &i, sizeof(int));
         if (*value != i && i != size - 1)
         {
-            string_concat(result_str,"Hash table test failed\n");
+            string_concat(result_str, "Hash table test failed\n");
             return 0;
         }
         else if (*value != 1000 && i == size - 1)
         {
-            string_concat(result_str,"Hash table test failed\n");
+            string_concat(result_str, "Hash table test failed\n");
             return 0;
         }
     }
     hash_table_free(ht);
     free(ht);
-    string_concat(result_str,"Hash table test passed\n");
+    string_concat(result_str, "Hash table test passed\n");
     return 1;
 }
 int set_test(arguments_t *args)
@@ -86,13 +87,13 @@ int set_test(arguments_t *args)
         int *value = set_type_get(s, i);
         if (*value != i)
         {
-            string_concat(result_str,"Set test failed\n");
+            string_concat(result_str, "Set test failed\n");
             return 0;
         }
     }
     set_type_free(s);
     free(s);
-    string_concat(result_str,"Set test passed\n");
+    string_concat(result_str, "Set test passed\n");
     return 1;
 }
 int hash_vector_test(arguments_t *args)
@@ -120,17 +121,17 @@ int hash_vector_test(arguments_t *args)
             int *value = vector_get(v, j, sizeof(int));
             if (*value != j)
             {
-                string_concat(result_str,"Hash vector test failed\n");
+                string_concat(result_str, "Hash vector test failed\n");
                 return 0;
             }
         }
     }
     hash_table_free(ht);
     free(ht);
-    string_concat(result_str,"Hash vector test passed\n");
+    string_concat(result_str, "Hash vector test passed\n");
     return 1;
 }
-void create_thread(void *thread_array, void *(*function)(void*), arguments_t *args, int index)
+void create_thread(void *thread_array, void *(*function)(void *), arguments_t *args, int index)
 {
 #ifdef _WIN32
     ((HANDLE *)thread_array)[index] = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)function, (void *)args, 0, NULL);
@@ -144,8 +145,8 @@ int main(int argc, char **argv)
     int runned = 0;
     if (argc > 1)
     {
-        string_t* result_str = malloc(sizeof(string_t));
-        string_init_alloc(result_str, 1024*1024);
+        string_t *result_str = malloc(sizeof(string_t));
+        string_init_alloc(result_str, 1024 * 1024);
 #ifdef _WIN32
         HANDLE *thread_array = malloc(sizeof(HANDLE) * (argc - 2));
 #else

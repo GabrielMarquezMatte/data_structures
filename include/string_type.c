@@ -54,7 +54,7 @@ void string_set(string_t *s, char *data, size_t size)
 void string_concat(string_t *s, char *data)
 {
     size_t size = strlen(data);
-    string_reserve(s, (s->size + size)*2);
+    string_reserve(s, (s->size + size) * 2);
     memcpy(s->data + s->size, data, size);
     s->size += size;
     s->data[s->size] = '\0';

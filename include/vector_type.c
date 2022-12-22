@@ -9,7 +9,7 @@ void vector_init(vector_t *v)
     v->size = 0;
     v->capacity = 0;
 }
-void vector_init_alloc(vector_t *v,size_t capacity, size_t size)
+void vector_init_alloc(vector_t *v, size_t capacity, size_t size)
 {
     v->data = malloc(capacity * size);
     v->size = 0;
