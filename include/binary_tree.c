@@ -46,14 +46,14 @@ void binary_tree_clear(binary_tree *tree)
     binary_tree_init(tree);
 }
 
-void binary_tree_insert(binary_tree *tree, void *data)
+void binary_tree_insert(binary_tree *tree, void *data, int (*compare)(void *, void *))
 {
     node_t *node = malloc(sizeof(node_t));
     node->data = data;
     node->left = NULL;
     node->right = NULL;
     node->parent = NULL;
-    if (!tree->root)
+    if (tree->root == NULL)
     {
         tree->root = node;
     }
@@ -62,7 +62,8 @@ void binary_tree_insert(binary_tree *tree, void *data)
         node_t *current = tree->root;
         while (current)
         {
-            if (strcmp(data, current->data) < 0)
+            int result = compare(data, current->data);
+            if (result < 0)
             {
                 if (current->left)
                 {
@@ -92,80 +93,111 @@ void binary_tree_insert(binary_tree *tree, void *data)
     }
 }
 
-size_t binary_tree_search(binary_tree *tree, void *data)
+void binary_tree_remove(binary_tree *tree, void *data, int (*compare)(void *, void *))
 {
-    node_t *current = tree->root;
-    while (current)
+    node_t *node = binary_tree_find(tree, data, compare);
+    if (node)
     {
-        if (strcmp(data, current->data) < 0)
-        {
-            current = current->left;
-        }
-        else if (strcmp(data, current->data) > 0)
-        {
-            current = current->right;
-        }
-        else
-        {
-            return 1;
-        }
+        binary_tree_remove_node(tree, node);
     }
-    return 0;
 }
 
-void binary_tree_delete(binary_tree *tree, void *data)
+void binary_tree_remove_node(binary_tree *tree, node_t *node)
 {
-    node_t *current = tree->root;
-    while (current)
+    if (node->left == NULL && node->right == NULL)
     {
-        if (strcmp(data, current->data) < 0)
+        if (node->parent)
         {
-            current = current->left;
-        }
-        else if (strcmp(data, current->data) > 0)
-        {
-            current = current->right;
-        }
-        else
-        {
-            if (current->left && current->right)
+            if (node->parent->left == node)
             {
-                node_t *successor = current->right;
-                while (successor->left)
-                {
-                    successor = successor->left;
-                }
-                current->data = successor->data;
-                current = successor;
-            }
-            node_t *parent = current->parent;
-            node_t *child = current->left ? current->left : current->right;
-            if (parent)
-            {
-                if (parent->left == current)
-                {
-                    parent->left = child;
-                }
-                else
-                {
-                    parent->right = child;
-                }
+                node->parent->left = NULL;
             }
             else
             {
-                tree->root = child;
+                node->parent->right = NULL;
             }
-            if (child)
-            {
-                child->parent = parent;
-            }
-            free(current);
-            break;
         }
+        else
+        {
+            tree->root = NULL;
+        }
+        free(node);
+    }
+    else if (node->left == NULL)
+    {
+        if (node->parent)
+        {
+            if (node->parent->left == node)
+            {
+                node->parent->left = node->right;
+            }
+            else
+            {
+                node->parent->right = node->right;
+            }
+        }
+        else
+        {
+            tree->root = node->right;
+        }
+        node->right->parent = node->parent;
+        free(node);
+    }
+    else if (node->right == NULL)
+    {
+        if (node->parent)
+        {
+            if (node->parent->left == node)
+            {
+                node->parent->left = node->left;
+            }
+            else
+            {
+                node->parent->right = node->left;
+            }
+        }
+        else
+        {
+            tree->root = node->left;
+        }
+        node->left->parent = node->parent;
+        free(node);
+    }
+    else
+    {
+        node_t *current = node->right;
+        while (current->left)
+        {
+            current = current->left;
+        }
+        node->data = current->data;
+        binary_tree_remove_node(tree, current);
     }
 }
 
-binary_tree *create_binary_tree()
+node_t *binary_tree_find(binary_tree *tree, void *data, int (*compare)(void *, void *))
+{
+    node_t *current = tree->root;
+    while (current)
+    {
+        int result = compare(data, current->data);
+        if (result == 0)
+        {
+            return current;
+        }
+        else if (result < 0)
+        {
+            current = current->left;
+        }
+        else
+        {
+            current = current->right;
+        }
+    }
+    return NULL;
+}
+
+binary_tree *binary_tree_create()
 {
     binary_tree *tree = malloc(sizeof(binary_tree));
     binary_tree_init(tree);

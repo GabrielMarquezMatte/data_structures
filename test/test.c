@@ -132,27 +132,40 @@ int hash_vector_test(arguments_t *args)
     return 1;
 }
 
+int compare(const void *a, const void *b)
+{
+    return (*(int *)a) - (*(int *)b);
+}
+
 int binary_tree_test(arguments_t *args)
 {
     int size = args->size;
     string_t *result_str = args->str;
     binary_tree *bt = malloc(sizeof(binary_tree));
+    set_t *set = malloc(sizeof(set_t));
     binary_tree_init(bt);
+    set_init_alloc(set, size);
     for (int i = 0; i < size; i++)
     {
-        binary_tree_insert(bt, &i);
+        int *value = malloc(sizeof(int));
+        *value = rand() % 10;
+        set_type_add(set, value);
+        binary_tree_insert(bt, value, compare);
     }
-    for (int i = 0; i < size; i++)
+    for (int i = 0; i < set->size; i++)
     {
-        size_t search = binary_tree_search(bt, &i);
-        if (search == 0)
+        int *value = set_type_get(set, i);
+        node_t *node = binary_tree_find(bt, value, compare);
+        if (node == NULL)
         {
             string_concat(result_str, "Binary tree test failed\n");
             return 0;
         }
     }
     binary_tree_free(bt);
+    set_type_free(set);
     free(bt);
+    free(set);
     string_concat(result_str, "Binary tree test passed\n");
     return 1;
 }
@@ -169,6 +182,9 @@ int main(int argc, char **argv)
 {
     int size = 100;
     int runned = 0;
+    argc = 3;
+    argv[1] = "100";
+    argv[2] = "--binary_tree";
     if (argc > 1)
     {
         string_t *result_str = malloc(sizeof(string_t));
@@ -209,7 +225,7 @@ int main(int argc, char **argv)
                 create_thread(thread_array, (void *)hash_vector_test, args, i - 2);
                 runned = 1;
             }
-            if(strcmp(argv[i], "--binary_tree") == 0)
+            if (strcmp(argv[i], "--binary_tree") == 0)
             {
                 create_thread(thread_array, (void *)binary_tree_test, args, i - 2);
                 runned = 1;

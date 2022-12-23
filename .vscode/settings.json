@@ -55,7 +55,11 @@
         "queue_type.h": "c",
         "windows.h": "c",
         "processthreadsapi.h": "c",
-        "vcruntime.h": "c"
+        "vcruntime.h": "c",
+        "odbcinst.h": "c",
+        "winapifamily.h": "c",
+        "sql.h": "c",
+        "sqltypes.h": "c"
     },
     "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools"
 }
