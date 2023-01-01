@@ -1,5 +1,5 @@
 #pragma once
-#include <vcruntime.h>
+#include <stdio.h>
 typedef struct set_t
 {
     size_t size;

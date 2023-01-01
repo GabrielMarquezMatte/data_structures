@@ -46,7 +46,7 @@ void binary_tree_clear(binary_tree *tree)
     binary_tree_init(tree);
 }
 
-void binary_tree_insert(binary_tree *tree, void *data, int (*compare)(void *, void *))
+void binary_tree_insert(binary_tree *tree, void *data, int (*compare)(const void *,const void *))
 {
     node_t *node = malloc(sizeof(node_t));
     node->data = data;
@@ -93,7 +93,7 @@ void binary_tree_insert(binary_tree *tree, void *data, int (*compare)(void *, vo
     }
 }
 
-void binary_tree_remove(binary_tree *tree, void *data, int (*compare)(void *, void *))
+void binary_tree_remove(binary_tree *tree, void *data, int (*compare)(const void *,const void *))
 {
     node_t *node = binary_tree_find(tree, data, compare);
     if (node)
@@ -175,7 +175,7 @@ void binary_tree_remove_node(binary_tree *tree, node_t *node)
     }
 }
 
-node_t *binary_tree_find(binary_tree *tree, void *data, int (*compare)(void *, void *))
+node_t *binary_tree_find(binary_tree *tree, void *data, int (*compare)(const void *,const void *))
 {
     node_t *current = tree->root;
     while (current)

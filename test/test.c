@@ -182,9 +182,6 @@ int main(int argc, char **argv)
 {
     int size = 100;
     int runned = 0;
-    argc = 3;
-    argv[1] = "100";
-    argv[2] = "--binary_tree";
     if (argc > 1)
     {
         string_t *result_str = malloc(sizeof(string_t));
