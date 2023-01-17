@@ -2,7 +2,7 @@ set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_package(Threads REQUIRED)
 add_executable(${PROJECT_NAME}_test test.c)
 target_link_libraries(${PROJECT_NAME}_test PRIVATE ${PROJECT_NAME} ${CMAKE_THREAD_LIBS_INIT})
-target_include_directories(${PROJECT_NAME}_test PRIVATE ${CMAKE_SOURCE_DIR}/include ${CMAKE_SOURCE_DIR})
+target_include_directories(${PROJECT_NAME}_test PRIVATE ${CMAKE_CURRENT_LIST_DIR}/../include ${CMAKE_CURRENT_LIST_DIR}/..)
 
 add_test(NAME Vector_Test COMMAND ${PROJECT_NAME}_test 100 -v)
 add_test(NAME Hash_Test COMMAND ${PROJECT_NAME}_test 100 --hash)
