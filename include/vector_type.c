@@ -61,3 +61,12 @@ void *vector_get(vector_t *v, size_t index, size_t size)
     }
     return (char *)v->data + index * size;
 }
+
+void vector_set(vector_t *v, size_t index, void *data, size_t size)
+{
+    if (index >= v->size)
+    {
+        return;
+    }
+    memcpy((char *)v->data + index * size, data, size);
+}

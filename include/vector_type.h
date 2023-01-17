@@ -14,3 +14,4 @@ void vector_clear(vector_t *v);
 void vector_remove(vector_t *v, size_t index, size_t size);
 void vector_reserve(vector_t *v, size_t capacity, size_t size);
 void *vector_get(vector_t *v, size_t index, size_t size);
+void vector_set(vector_t *v, size_t index, void *data, size_t size);
