@@ -17,7 +17,12 @@ void vector_init_alloc(vector_t *v, size_t capacity, size_t size)
 }
 void vector_push_back(vector_t *v, void *data, size_t size)
 {
-    if (v->size == v->capacity)
+    if (size <= 0)
+    {
+		printf("Error: Invalid size\n");
+		return;
+    }
+    if (v->size == v->capacity && v->size > 0)
     {
         v->capacity = v->capacity ? v->capacity * 2 : 1;
         v->data = realloc(v->data, v->capacity * size);
